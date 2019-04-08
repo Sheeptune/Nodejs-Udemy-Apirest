@@ -28,17 +28,17 @@ app.use(morgan('dev'))
 // By convention we replaced all res.send by res.json to stringify automatically
 // and we set both success and error functions (we can find in the node_modules folder)
 app.get('/api/v1/members/:id', (req, res) => {
-    res.json(success(members[(req.params.id)-1].name))
+    res.json(func.success(members[(req.params.id)-1].name))
 })
 
 app.get('/api/v1/members', (req, res) => {
     // Using req.query ?=max to display the array
     if (req.query.max != undefined && req.query.max > 0) {
-        res.json(success(members.slice(0, req.quuery.max)))
+        res.json(func.success(members.slice(0, req.quuery.max)))
     } else if (req.query.max != undefined) {
-        res.json(error('Wrong max value'))
+        res.json(func.error('Wrong max value'))
     } else {
-        res.json(success(members))
+        res.json(func.success(members))
         }
     }
 )
