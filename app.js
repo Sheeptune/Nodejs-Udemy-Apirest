@@ -1,5 +1,7 @@
 // Appealing to Success and Error functions
-const func = require('functions')
+// USED TO BE > const func = require('functions')
+const {success, error} = require('functions')
+
 // Appealing to body-parser middleware
 const bodyParser = require('body-parser')
 // Appealing to Express throught "app"
@@ -34,17 +36,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // By convention we replaced all res.send by res.json to stringify automatically
 // and we set both success and error functions (we can find in the node_modules folder)
 app.get('/api/v1/members/:id', (req, res) => {
-    res.json(func.success(members[(req.params.id)-1].name))
+
+    let index = getIndex(req.params.id);
+
+    // We will get the members by using the getIndex function
+    if (typeof(index) == 'string') {
+        res.json(error(index))
+    } else {
+
+        res.json(success(members[index]))
+    }
 })
 
 app.get('/api/v1/members', (req, res) => {
     // Using req.query ?=max to display the array
     if (req.query.max != undefined && req.query.max > 0) {
-        res.json(func.success(members.slice(0, req.quuery.max)))
+        res.json(success(members.slice(0, req.quuery.max)))
     } else if (req.query.max != undefined) {
-        res.json(func.error('Wrong max value'))
+        res.json(error('Wrong max value'))
     } else {
-        res.json(func.success(members))
+        res.json(success(members))
     }
 })
 
@@ -66,16 +77,16 @@ app.post('/api/v1/members', (req, res) => {
 
         // If the name is already taken
         if (sameName) {
-            res.json(func.error('This name is already taken'))
+            res.json(error('This name is already taken'))
         } else {
-            
+
             let member = {
             id: members.length+1,
             name: req.body.name
             }
 
             members.push(member)
-            res.json(func.success(member))
+            res.json(success(member))
         }
     }
 })
@@ -84,3 +95,12 @@ app.post('/api/v1/members', (req, res) => {
 app.listen(8080, ()=>{
     console.log('Started on port 8080')
 })
+
+// function to with index according to its id 
+function getIndex(id) {
+    for (let i = à; i < members.length; i++){
+        if (members[i].id == id)
+            return i 
+    }
+    return 'wrong id'
+}
