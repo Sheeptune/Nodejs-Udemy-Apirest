@@ -127,7 +127,7 @@ app.post('/api/v1/members', (req, res) => {
         } else {
 
             let member = {
-            id: members.length+1,
+            id: createID(),
             name: req.body.name
             }
 
@@ -149,4 +149,10 @@ function getIndex(id) {
             return i 
     }
     return 'wrong id'
+}
+
+// We will use this function upon the POST method to avoid id duplication
+function createID(){
+    // we get back the last members and its id + 1 to get a new id
+    return members[members.length-1].id + 1
 }
