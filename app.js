@@ -48,6 +48,35 @@ app.get('/api/v1/members/:id', (req, res) => {
     }
 })
 
+//Using PUT to modify members
+app.put('/api/v1/members/:id', (req, res) =>{
+
+    let index = getIndex(req.params.id);
+
+    if (typeof(index) == 'string') {
+        res.json(error(index))
+    } else {
+        // If not a string, save mofication
+        //let member = members[index]
+        let same = false
+        
+        // Loop to make sure that the name is not already taken
+        for (let i = 0; i < members.length; i++){
+            // if the name is already taken & if the id is not the same that is used
+            if (req.body.name == members[i].name && req.params.id != members[i].id) {
+                same = true
+                break
+            }     
+        } // if same Name true error, if not success
+            if (same){
+                res.json(error('same name'))
+            } else {
+                members[index] = req.body.name
+                res.json(success(true))
+            }
+        }
+    })
+
 app.get('/api/v1/members', (req, res) => {
     // Using req.query ?=max to display the array
     if (req.query.max != undefined && req.query.max > 0) {
@@ -98,7 +127,7 @@ app.listen(8080, ()=>{
 
 // function to with index according to its id 
 function getIndex(id) {
-    for (let i = à; i < members.length; i++){
+    for (let i = 0; i < members.length; i++){
         if (members[i].id == id)
             return i 
     }
