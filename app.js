@@ -54,19 +54,30 @@ app.post('/api/v1/members', (req, res) => {
     // We check if the parameters does exist to add a new member
     if (req.body.name) {
 
-        let member = {
-            id: members.length+1,
-            name: req.body.name
+        let sameName = false
+
+        // Check if the name is available or not
+        for (let i = 0; i < members.length; i++){
+            if (members[i].name == req.body.name) {
+                sameName = true
+                break
+            }
         }
 
-        members.push(member)
+        // If the name is already taken
+        if (sameName) {
+            res.json(func.error('This name is already taken'))
+        } else {
+            
+            let member = {
+            id: members.length+1,
+            name: req.body.name
+            }
 
-        res.json(func.success(member))
-
-    } else {
-        res.json(func.error('no name value'))
+            members.push(member)
+            res.json(func.success(member))
+        }
     }
-
 })
 
 // Listenning 
