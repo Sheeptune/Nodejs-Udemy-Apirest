@@ -73,9 +73,26 @@ app.put('/api/v1/members/:id', (req, res) =>{
             } else {
                 members[index] = req.body.name
                 res.json(success(true))
-            }
         }
-    })
+    }
+})
+
+// Using DELETE to delete members
+app.delete('/api/v1/members/:id', (req, res)=>{
+
+    let index = getIndex(req.params.id);
+
+    // does the id already exist
+
+    if (typeof(index) == 'string') {
+        res.json(error(index))
+    } else {
+        members.splice(index, 1)
+        res.json(success(members))
+    }
+})
+
+
 
 app.get('/api/v1/members', (req, res) => {
     // Using req.query ?=max to display the array
