@@ -8,6 +8,8 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+// We use the config.json file to change the port without touching this code
+const config = require('./config')
 
 // Creation of an array of objects
 const members = [
@@ -148,10 +150,12 @@ MembersRouter.route('/')
     })
 
 // ROUTER ** > MembersRouter is taking action over '/api/v1/members'
-app.use('/api/v1/members', MembersRouter)
+// We replace '/api/v1/' by config.rootAPI
+app.use(config.rootAPI+'members', MembersRouter)
 
 // Listenning 
-app.listen(8080, ()=>{
+// We replace 8080 by config.port
+app.listen(config.port, ()=>{
     console.log('Started on port 8080')
 })
 
